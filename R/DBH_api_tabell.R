@@ -82,6 +82,22 @@
     )
   }
 
+  sort_by_warning <- setdiff(sort_by, group_by)
+  if (length(sort_by_warning) > 0) {
+    warning(
+      paste0(
+        "The following variables have been excluded from the sorting as they are not included in the grouping: ",
+        paste0(sort_by_warning, collapse = ", ")
+      ),
+      call. = FALSE
+    )
+  }
+
+  if (length(sort_by) == 0) {
+    sort_by <- group_by
+  } else {
+    sort_by <- intersect(sort_by, group_by)
+  }
 
   if (length(exclude_warning) > 0) {
     warning(
