@@ -110,14 +110,27 @@
     )
   }
 
-
-  return(list(
+  res <- list(
     tabell_id = table_id,
-    variabler = lapply(variables, .as_character_utf8),
-    groupBy = lapply(group_by, .as_character_utf8),
     sortBy = lapply(sort_by, .as_character_utf8),
     filter = filter_query
-  ))
+  )
+
+  if (!is.null(group_by)) {
+    if (!is.null(variables)) {
+      warning(
+        paste0(
+          "`Variables' cannot be combined with `group_by'.",
+          "The selection of the following variables has been disregarded: ",
+          paste0(variables, collapse = ",")
+        ))
+    }
+    res <- c(res, list(groupBy = lapply(group_by, .as_character_utf8)))
+  } else {
+    res <- c(res, list(variabler = lapply(variables, .as_character_utf8)))
+  }
+
+  return(res)
 }
 
 
